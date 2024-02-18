@@ -8,10 +8,16 @@ inline size_t MyString::length() {
   return this->len;
 }
 
-MyString::MyString(const char* str = nullptr) {
-  if (str == nullptr) {
+// MyString::MyString() {
+//   this->len = 0;
+//   this->buf = nullptr;
+// }
+
+MyString::MyString(const char* str) {
+  if (str == NULL) {
     this->len = 0;
     this->buf = nullptr;
+    return;
   }
   this->len = strlen(str);
   this->buf = new char[this->len];
@@ -67,6 +73,9 @@ MyString MyString::operator-(const MyString& excl) {
   }
 
   MyString res;
+  if (tempLen == 0) {
+    return res;
+  }
   res.len = tempLen;
   res.buf = new char[tempLen];
   memcpy_s(res.buf, tempLen, tempBuf, tempLen);
@@ -76,6 +85,9 @@ MyString MyString::operator-(const MyString& excl) {
 
 MyString MyString::operator*(size_t n) {
   MyString res;
+  if (n == 0) {
+    return res;
+  }
   res.len = this->len * n;
   res.buf = new char[res.len];
   for (size_t i = 0; i < n; i++) {
@@ -109,40 +121,39 @@ bool MyString::operator!=(const MyString& str1) {
   return memcmp(this->buf, str1.buf, this->len) != 0;
 }
 
-bool MyString::operator>(const MyString& str1) {
+int MyString::compare(const MyString& str1) {
   locale loc;
   const collate<char>& col = use_facet<collate<char>>(loc);
   int res = col.compare(this->buf, this->buf + this->len, str1.buf,
     str1.buf + str1.len);
+  return res;
+}
+
+bool MyString::operator>(const MyString& str1) {
+  int res = this->compare(str1);
   return res == 1;
 }
 
 bool MyString::operator<(const MyString& str1) {
-  locale loc;
-  const collate<char>& col = use_facet<collate<char>>(loc);
-  int res = col.compare(this->buf, this->buf + this->len, str1.buf,
-    str1.buf + str1.len);
+  int res = this->compare(str1);
   return res == -1;
 }
 
 bool MyString::operator>=(const MyString& str1) {
-  locale loc;
-  const collate<char>& col = use_facet<collate<char>>(loc);
-  int res = col.compare(this->buf, this->buf + this->len, str1.buf,
-    str1.buf + str1.len);
+  int res = this->compare(str1);
   return res >= 0;
 }
 
 bool MyString::operator<=(const MyString& str1) {
-  locale loc;
-  const collate<char>& col = use_facet<collate<char>>(loc);
-  int res = col.compare(this->buf, this->buf + this->len, str1.buf,
-    str1.buf + str1.len);
+  int res = this->compare(str1);
   return res <= 0;
 }
 
 MyString MyString::operator!() {
   MyString res;
+  if (this->len == 0) {
+    return res;
+  }
   res.len = this->len;
   res.buf = new char[res.len];
   for (size_t i = 0; i < res.len; i++) {
@@ -157,7 +168,7 @@ MyString MyString::operator!() {
   return res;
 }
 
-inline char MyString::operator[](size_t i) {
+char MyString::operator[](size_t i) {
   return this->buf[i];
 }
 
@@ -171,18 +182,19 @@ int64_t MyString::operator()(const MyString& substr) {
     table[i] = substr.len;
   }
   for (size_t i = 0; i < substr.len - 1; i++) {
-    uint8_t index = static_cast<uint8_t>(substr.buf[i]);
+    uint8_t index = *reinterpret_cast<uint8_t*>(&substr.buf[i]);
     table[index] = substr.len - i - 1;
   }
 
   int64_t skip = 0;
   bool found = false;
   while (this->len - skip >= substr.len) {
-    if (memcmp(this->buf + skip, substr.buf, substr.len)) {
+    if (memcmp(this->buf + skip, substr.buf, substr.len) == 0) {
       found = true;
       break;
     }
-    uint8_t index = static_cast<uint8_t>(this->buf[skip + substr.len - 1]);
+    uint8_t index = *reinterpret_cast<uint8_t*>(
+      &this->buf[skip + substr.len - 1]);
     skip += table[index];
   }
 
@@ -202,8 +214,32 @@ void MyString::operator=(const MyString& str) {
   memcpy_s(this->buf, this->len, str.buf, this->len);
 }
 
-void MyString::operator=(MyString&& str) {
-  delete[] this->buf;
-  this->len = str.len;
-  this->buf = str.buf;
+// void MyString::operator=(MyString&& str) {
+//   delete[] this->buf;
+//   this->len = str.len;
+//   this->buf = str.buf;
+// }
+
+ostream& operator<< (ostream& out, const MyString& str) {
+  if (str.len == 0) {
+    out << "";
+    return out;
+  }
+
+  for (size_t i = 0; i < str.len; i++) {
+    // int n = str.buf[i];
+    // out << n << ' ';
+    out << str.buf[i];
+  }
+  return out;
+}
+
+istream& operator>> (istream& in, MyString& str) {
+  string s;
+  in >> s;
+  delete[] str.buf;
+  str.len = s.length();
+  str.buf = new char[str.len];
+  memcpy_s(str.buf, str.len, s.data(), str.len);
+  return in;
 }
