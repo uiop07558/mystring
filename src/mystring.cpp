@@ -1,3 +1,4 @@
+// Copyright [2024] <>
 #include "../include/mystring.hpp"
 
 char* MyString::get() {

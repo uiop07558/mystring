@@ -1,3 +1,4 @@
+// Copyright [2024] <>
 #include "../include/mystring.hpp"
 
 using std::cout;
@@ -42,7 +43,7 @@ int main() {
   cout << "str1 == str1 = " << (str1 == str1) << '\n';
   cout << "str1 != str2 = " << (str1 != str2) << '\n';
   cout << "str1 != str1 = " << (str1 != str1) << "\n";
-  
+
   cout << "\nLexicographical comparisons\n";
   cout << "str1 > str2 = " << (str1 > str2) << '\n';
   cout << "str1 < str2 = " << (str1 < str2) << '\n';
@@ -52,17 +53,17 @@ int main() {
   cout << "str1 <= str2 = " << (str1 <= str2) << '\n';
   cout << "str1 >= str1 = " << (str1 >= str1) << '\n';
   cout << "str1 <= str1 = " << (str1 <= str1) << '\n';
-  
+
   cout << "\n!\n";
   cout << "!str1 = " << !str1 << '\n';
   cout << "!!str1 = " << !!str1 << '\n';
   cout << "!str7 = " << !str7 << '\n';
-  
+
   cout << "\nSubstring search\n";
   cout << "str6(str2) = " << str6(str2) << '\n';
   cout << "str1(str6) = " << str1(str6) << '\n';
   cout << "str6(str7) = " << str6(str7) << '\n';
-  
+
   cout << "\nRandom access\n";
   cout << "str6[0] = " << str6[0] << '\n';
   cout << "str6[3] = " << str6[3] << '\n';
