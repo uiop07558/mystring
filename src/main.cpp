@@ -67,6 +67,10 @@ int main() {
   cout << "str6[0] = " << str6[0] << '\n';
   cout << "str6[3] = " << str6[3] << '\n';
 
+  cout << "\nGetters\n";
+  cout << "str6.length() =  " << str6.length() << '\n';
+  cout << "str6.get() = " << reinterpret_cast<void*>(str6.get()) << '\n';
+
   cout << "\nInput\n";
   MyString strin;
   cin >> strin;

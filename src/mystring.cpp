@@ -1,10 +1,10 @@
 #include "../include/mystring.hpp"
 
-inline char* MyString::get() {
+char* MyString::get() {
   return this->buf;
 }
 
-inline size_t MyString::length() {
+size_t MyString::length() {
   return this->len;
 }
 
