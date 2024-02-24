@@ -22,7 +22,6 @@ class MyString {
   int compare(const MyString& str1);
 
  public:
-  // MyString();
   explicit MyString(const char* str = NULL);
   explicit MyString(string str);
   MyString(const MyString& str);

@@ -9,11 +9,6 @@ size_t MyString::length() {
   return this->len;
 }
 
-// MyString::MyString() {
-//   this->len = 0;
-//   this->buf = nullptr;
-// }
-
 MyString::MyString(const char* str) {
   if (str == NULL) {
     this->len = 0;
